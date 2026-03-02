@@ -58,4 +58,3 @@ public class Producto {
     @JoinColumn(name = "id_vendedor", nullable = false)
     private Usuario vendedor;
 }
-*/
