@@ -1,60 +1,61 @@
-package com.ecommerce.backend.entity;
+/*package com.ecommerce.backend.entity;
+
+
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+@Entity
+@Table(name = "producto")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Producto {
 
-    private int idProducto;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_producto")
+    private Integer id;
+
+    @Column(nullable = false, unique = true, length = 50)
     private String codigo;
+
+    @Column(nullable = false, length = 50)
     private String nombre;
+
+    @Column(nullable = false, length = 1000)
     private String descripcion;
+
+    @Column(name = "precio_original", nullable = false, precision = 10, scale = 2)
     private BigDecimal precioOriginal;
+
+    @Column(name = "precio_reducido", nullable = false, precision = 10, scale = 2)
     private BigDecimal precioReducido;
+
+    @Column(name = "fecha_vencimiento", nullable = false)
     private LocalDate fechaVencimiento;
-    private int stock;
+
+    @Column(nullable = false)
+    private Integer stock;
+
+    @Column(name = "unidad_venta", nullable = false, length = 20)
     private String unidadVenta;
 
-    // relaciones
-    private Categoria categoria;  // id_categoria
-    private Usuario vendedor;      // id_vendedor
+    @Column(nullable = false)
+    private Boolean estado;
 
-    private boolean estado;
+    // RELACIONES
 
-    // getters y setters
-    public int getIdProducto() { return idProducto; }
-    public void setIdProducto(int idProducto) { this.idProducto = idProducto; }
+    @ManyToOne
+    @JoinColumn(name = "id_categoria", nullable = false)
+    private Categoria categoria;
 
-    public String getCodigo() { return codigo; }
-    public void setCodigo(String codigo) { this.codigo = codigo; }
-
-    public String getNombre() { return nombre; }
-    public void setNombre(String nombre) { this.nombre = nombre; }
-
-    public String getDescripcion() { return descripcion; }
-    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
-
-    public BigDecimal getPrecioOriginal() { return precioOriginal; }
-    public void setPrecioOriginal(BigDecimal precioOriginal) { this.precioOriginal = precioOriginal; }
-
-    public BigDecimal getPrecioReducido() { return precioReducido; }
-    public void setPrecioReducido(BigDecimal precioReducido) { this.precioReducido = precioReducido; }
-
-    public LocalDate getFechaVencimiento() { return fechaVencimiento; }
-    public void setFechaVencimiento(LocalDate fechaVencimiento) { this.fechaVencimiento = fechaVencimiento; }
-
-    public int getStock() { return stock; }
-    public void setStock(int stock) { this.stock = stock; }
-
-    public String getUnidadVenta() { return unidadVenta; }
-    public void setUnidadVenta(String unidadVenta) { this.unidadVenta = unidadVenta; }
-
-    public Categoria getCategoria() { return categoria; }
-    public void setCategoria(Categoria categoria) { this.categoria = categoria; }
-
-    public Usuario getVendedor() { return vendedor; }
-    public void setVendedor(Usuario vendedor) { this.vendedor = vendedor; }
-
-    public boolean isEstado() { return estado; }
-    public void setEstado(boolean estado) { this.estado = estado; }
+    @ManyToOne
+    @JoinColumn(name = "id_vendedor", nullable = false)
+    private Usuario vendedor;
 }
+*/
