@@ -31,6 +31,9 @@ public class Usuario {
     @JoinColumn(name = "id_tipo_persona")
     private TipoPersona tipoPersona;
 
+    @Column(length = 20)
+    private String dni;
+
     @Column(length = 50)
     private String nombre;
 
