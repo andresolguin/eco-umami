@@ -2,6 +2,7 @@ package com.ecommerce.backend.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Table(name = "usuario")
@@ -20,6 +21,7 @@ public class Usuario {
     @Column(nullable = false, length = 100, unique = true)
     private String mail;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(nullable = false, length = 100)
     private String pass;
 
