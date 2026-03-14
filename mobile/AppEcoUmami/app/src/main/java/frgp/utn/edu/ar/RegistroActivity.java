@@ -6,20 +6,20 @@ import android.content.Intent;
 import android.widget.TextView;
 import android.view.View;
 
-public class Principal extends ComponentActivity {
+public class RegistroActivity extends ComponentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_principal);
+        setContentView(R.layout.activity_registro);
 
-        TextView linkRegistro = findViewById(R.id.linkRegistro);
+        TextView linkLogin = findViewById(R.id.linkIniciarSesio);
 
-        linkRegistro.setOnClickListener(new View.OnClickListener() {
+        linkLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(Principal.this, RegistroActivity.class);
+                Intent intent = new Intent(RegistroActivity.this, Principal.class);
                 startActivity(intent);
 
             }

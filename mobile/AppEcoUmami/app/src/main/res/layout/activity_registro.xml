@@ -23,9 +23,9 @@
         android:id="@+id/ingreseUsuarioRegistro"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="180dp"
         android:layout_marginTop="52dp"
         android:text="Usuario"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/bienvenidaRegistro" />
 
@@ -44,9 +44,9 @@
         android:id="@+id/txtPasswordLabelRegistro"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="168dp"
         android:layout_marginTop="28dp"
         android:text="Contraseña"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/txtUsuarioRegistro" />
 
