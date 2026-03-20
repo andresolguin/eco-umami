@@ -17,54 +17,69 @@ public class UsuarioController {
         this.usuarioService = usuarioService;
     }
 
+    // 🔹 LISTAR TODOS (activos + inactivos)
     @GetMapping
-    public List<Usuario> listar(){
+    public List<Usuario> listarTodos(){
         return usuarioService.listarTodos();
     }
 
+    // 🔹 LISTAR SOLO ACTIVOS
+    @GetMapping("/activos")
+    public List<Usuario> listarActivos(){
+        return usuarioService.buscarActivos();
+    }
+
+    // 🔹 LISTAR POR ESTADO (true / false)
+    @GetMapping("/estado")
+    public List<Usuario> listarPorEstado(@RequestParam Boolean estado){
+        return usuarioService.listarPorEstado(estado);
+    }
+
+    // 🔹 BUSCAR POR ID
     @GetMapping("/{id}")
     public Optional<Usuario> buscarPorId(@PathVariable Integer id){
         return usuarioService.buscarPorId(id);
     }
 
+    // 🔹 CREAR
     @PostMapping
-    public Usuario crear(@RequestBody Usuario usuario){
+    public Usuario guardar(@RequestBody Usuario usuario){
         return usuarioService.guardar(usuario);
     }
 
-    @PutMapping("/{id}")
-    public Usuario modificar(@PathVariable Integer id, @RequestBody Usuario usuario){
-        usuario.setId(id);
-        return usuarioService.guardar(usuario);
-    }
-
+    // 🔹 ELIMINACIÓN LÓGICA
     @DeleteMapping("/{id}")
     public void eliminar(@PathVariable Integer id){
         usuarioService.eliminar(id);
     }
 
-    @GetMapping("/nombre/{nombre}")
-    public List<Usuario> buscarPorNombre(@PathVariable String nombre){
+    // 🔹 REACTIVAR
+    @PutMapping("/reactivar/{id}")
+    public void reactivar(@PathVariable Integer id){
+        usuarioService.reactivar(id);
+    }
+
+    // 🔹 BUSCAR POR NOMBRE
+    @GetMapping("/buscar")
+    public List<Usuario> buscarPorNombre(@RequestParam String nombre){
         return usuarioService.buscarPorNombre(nombre);
     }
 
-    @GetMapping("/activos")
-    public List<Usuario> activos(){
-        return usuarioService.buscarActivos();
-    }
-
-    @GetMapping("/mail/{mail}")
-    public Optional<Usuario> buscarPorMail(@PathVariable String mail){
+    // 🔹 BUSCAR POR MAIL
+    @GetMapping("/mail")
+    public Optional<Usuario> buscarPorMail(@RequestParam String mail){
         return usuarioService.buscarPorMail(mail);
     }
 
-    @GetMapping("/cuit/{cuit}")
-    public Optional<Usuario> buscarPorCuit(@PathVariable String cuit){
+    // 🔹 BUSCAR POR CUIT
+    @GetMapping("/cuit")
+    public Optional<Usuario> buscarPorCuit(@RequestParam String cuit){
         return usuarioService.buscarPorCuit(cuit);
     }
 
-    @GetMapping("/dni/{dni}")
-    public Optional<Usuario> buscarPorDni(@PathVariable String dni){
+    // 🔹 BUSCAR POR DNI
+    @GetMapping("/dni")
+    public Optional<Usuario> buscarPorDni(@RequestParam String dni){
         return usuarioService.buscarPorDni(dni);
     }
 }

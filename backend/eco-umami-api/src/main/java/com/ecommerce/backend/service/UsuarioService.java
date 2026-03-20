@@ -25,11 +25,18 @@ public class UsuarioService {
     }
 
     public Usuario guardar(Usuario usuario){
+        if (usuario.getEstado() == null) {
+            usuario.setEstado(true);
+        }
         return usuarioRepository.save(usuario);
     }
 
     public void eliminar(Integer id){
-        usuarioRepository.deleteById(id);
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        usuario.setEstado(false); // ← eliminación lógica
+        usuarioRepository.save(usuario);
     }
 
     public List<Usuario> buscarPorNombre(String nombre){
@@ -52,4 +59,16 @@ public class UsuarioService {
         return usuarioRepository.findByDni(dni);
     }
 
+    public void reactivar(Integer id){
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        usuario.setEstado(true);
+        usuarioRepository.save(usuario);
+    }
+
+    // FILTRAR POR ESTADO
+    public List<Usuario> listarPorEstado(Boolean estado){
+        return usuarioRepository.findByEstado(estado);
+    }
 }
