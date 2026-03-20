@@ -1,45 +1,28 @@
 package frgp.utn.edu.ar;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
-import android.widget.EditText;
+import androidx.activity.ComponentActivity;
+import android.content.Intent;
 import android.widget.TextView;
-import android.widget.Toast;
-import androidx.appcompat.app.AppCompatActivity;
+import android.view.View;
 
-public class RegistroActivity extends AppCompatActivity {
-
-    EditText usuario;
-    EditText password;
-    Button botonRegistro;
-    TextView linkLogin;
+public class RegistroActivity extends ComponentActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registro);
 
-        usuario = findViewById(R.id.txtUsuarioRegistro);
-        password = findViewById(R.id.txtPasswordRegistro);
-        botonRegistro = findViewById(R.id.btnRegistro);
-        linkLogin = findViewById(R.id.linkIniciarSesio);
+        TextView linkLogin = findViewById(R.id.linkIniciarSesio);
 
-        botonRegistro.setOnClickListener(v -> {
-            String user = usuario.getText().toString().trim();
-            String pass = password.getText().toString().trim();
+        linkLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-            if(user.isEmpty() || pass.isEmpty()){
-                Toast.makeText(this, "Complete todos los campos", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, "Usuario registrado correctamente", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(this, Principal.class);
+                Intent intent = new Intent(RegistroActivity.this, Principal.class);
                 startActivity(intent);
-            }
-        });
 
-        linkLogin.setOnClickListener(v -> {
-            finish(); // vuelve al login
+            }
         });
     }
 }
