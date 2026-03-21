@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/usuarios")
+@RequestMapping("/api/usuarios")
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
@@ -44,6 +44,13 @@ public class UsuarioController {
     // 🔹 CREAR
     @PostMapping
     public Usuario guardar(@RequestBody Usuario usuario){
+        return usuarioService.guardar(usuario);
+    }
+
+    // 🔹 MODIFICAR
+    @PutMapping("/{id}")
+    public Usuario modificar(@PathVariable Integer id, @RequestBody Usuario usuario){
+        usuario.setId(id);
         return usuarioService.guardar(usuario);
     }
 
