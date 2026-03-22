@@ -13,6 +13,7 @@
         android:theme="@style/Theme.AppEcoUmami">
 
         <activity android:name=".RegistroActivity" />
+        <activity android:name=".MenuClienteActivity" />
 
         <activity
             android:name=".Principal"
