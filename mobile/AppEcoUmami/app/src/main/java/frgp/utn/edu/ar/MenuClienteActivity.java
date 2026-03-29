@@ -24,11 +24,10 @@ public class MenuClienteActivity extends AppCompatActivity {
         btnCerrarSesion = findViewById(R.id.btnCerrarSesion);
 
         // CATÁLOGO
-        btnCatalogo.setOnClickListener(v ->
-                Toast.makeText(MenuClienteActivity.this,
-                        "Proximamente",
-                        Toast.LENGTH_SHORT).show()
-        );
+        btnCatalogo.setOnClickListener(v -> {
+            Intent intent = new Intent(MenuClienteActivity.this, CatalogoClienteActivity.class);
+            startActivity(intent);
+        });
 
         // CARRITO
         btnCarrito.setOnClickListener(v ->
