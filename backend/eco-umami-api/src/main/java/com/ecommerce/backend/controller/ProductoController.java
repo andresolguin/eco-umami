@@ -17,13 +17,13 @@ public class ProductoController {
         this.productoService = productoService;
     }
 
-    // 🔹 LISTAR TODOS
+    // 🔹 LISTAR TODOS para admin
     @GetMapping
     public List<Producto> listarTodos(){
         return productoService.listarTodos();
     }
 
-    // 🔹 LISTAR ACTIVOS
+    // 🔹 LISTAR ACTIVOS para cliente
     @GetMapping("/activos")
     public List<Producto> listarActivos(){
         return productoService.listarActivos();
