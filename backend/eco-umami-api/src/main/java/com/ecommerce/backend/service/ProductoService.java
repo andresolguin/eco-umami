@@ -4,6 +4,7 @@ import com.ecommerce.backend.entity.Producto;
 import com.ecommerce.backend.repository.ProductoRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,14 +17,17 @@ public class ProductoService {
         this.productoRepository = productoRepository;
     }
 
-    // 🔹 LISTAR TODOS
+    // 🔹 LISTAR TODOS (solo para admin/debug)
     public List<Producto> listarTodos(){
         return productoRepository.findAll();
     }
 
-    // 🔹 LISTAR SOLO ACTIVOS
+    // 🔹 LISTAR SOLO PRODUCTOS VÁLIDOS (LO IMPORTANTE)
     public List<Producto> listarActivos(){
-        return productoRepository.findByEstadoTrue();
+        return productoRepository
+                .findByEstadoTrueAndStockGreaterThanAndFechaVencimientoAfter(
+                        0, LocalDate.now()
+                );
     }
 
     // 🔹 LISTAR POR ESTADO
@@ -36,19 +40,63 @@ public class ProductoService {
         return productoRepository.findById(id);
     }
 
-    // 🔹 AGREGAR / GUARDAR
+    // 🔹 CREAR
     public Producto guardar(Producto producto){
+
+        // ✅ VALIDAR CÓDIGO ÚNICO
+        if(productoRepository.existsByCodigo(producto.getCodigo())){
+            throw new RuntimeException("El código ya existe");
+        }
+
+        // ✅ VALIDAR PRECIOS
+        if (producto.getPrecioReducido().compareTo(producto.getPrecioOriginal()) >= 0) {
+            throw new RuntimeException("El precio reducido debe ser menor al original");
+        }
+
+        // ✅ VALIDAR STOCK
+        if (producto.getStock() < 0) {
+            throw new RuntimeException("El stock no puede ser negativo");
+        }
+
+        // ✅ VALIDAR FECHA
+        if (producto.getFechaVencimiento().isBefore(LocalDate.now())) {
+            throw new RuntimeException("El producto no puede estar vencido");
+        }
+
+        // ✅ ESTADO POR DEFECTO
         if (producto.getEstado() == null) {
             producto.setEstado(true);
         }
+
         return productoRepository.save(producto);
     }
 
     // 🔹 MODIFICAR
     public Producto modificar(Integer id, Producto producto){
+
         Producto existente = productoRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
 
+        // ✅ VALIDAR CÓDIGO SI CAMBIA
+        if(!existente.getCodigo().equals(producto.getCodigo()) &&
+                productoRepository.existsByCodigo(producto.getCodigo())){
+            throw new RuntimeException("El código ya existe");
+        }
+
+        // ✅ VALIDACIONES
+        if (producto.getPrecioReducido().compareTo(producto.getPrecioOriginal()) >= 0) {
+            throw new RuntimeException("El precio reducido debe ser menor al original");
+        }
+
+        if (producto.getStock() < 0) {
+            throw new RuntimeException("El stock no puede ser negativo");
+        }
+
+        if (producto.getFechaVencimiento().isBefore(LocalDate.now())) {
+            throw new RuntimeException("El producto no puede estar vencido");
+        }
+
+        // 🔹 SETEO
         existente.setCodigo(producto.getCodigo());
         existente.setNombre(producto.getNombre());
         existente.setDescripcion(producto.getDescripcion());
