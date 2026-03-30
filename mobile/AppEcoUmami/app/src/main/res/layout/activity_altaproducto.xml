@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp">
+
+        <TextView
+            android:id="@+id/txtTitulo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nuevo Producto"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/etCodigo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="Código"
+            app:layout_constraintTop_toBottomOf="@id/txtTitulo"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="20dp"/>
+
+        <EditText
+            android:id="@+id/etNombre"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="Nombre"
+            app:layout_constraintTop_toBottomOf="@id/etCodigo"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="12dp"/>
+
+        <EditText
+            android:id="@+id/etDescripcion"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="Descripción"
+            android:minLines="3"
+            android:gravity="top"
+            app:layout_constraintTop_toBottomOf="@id/etNombre"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="12dp"/>
+
+        <EditText
+            android:id="@+id/etPrecioOriginal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="Precio Original"
+            android:inputType="numberDecimal"
+            app:layout_constraintTop_toBottomOf="@id/etDescripcion"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="12dp"/>
+
+        <EditText
+            android:id="@+id/etPrecioReducido"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="Precio Reducido"
+            android:inputType="numberDecimal"
+            app:layout_constraintTop_toBottomOf="@id/etPrecioOriginal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="12dp"/>
+
+        <EditText
+            android:id="@+id/etFechaVencimiento"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="Fecha de vencimiento"
+            android:focusable="false"
+            android:clickable="true"
+            app:layout_constraintTop_toBottomOf="@id/etPrecioReducido"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="12dp"/>
+
+        <EditText
+            android:id="@+id/etStock"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="Stock"
+            android:inputType="number"
+            app:layout_constraintTop_toBottomOf="@id/etFechaVencimiento"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="12dp"/>
+
+        <EditText
+            android:id="@+id/etUnidadVenta"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="Unidad de venta (kg, unidad, pack, etc)"
+            app:layout_constraintTop_toBottomOf="@id/etStock"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="12dp"/>
+
+        <Spinner
+            android:id="@+id/spCategoria"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/etUnidadVenta"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="12dp"/>
+
+        <Button
+            android:id="@+id/btnGuardarProducto"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:text="Guardar Producto"
+            android:textSize="18sp"
+            android:layout_marginTop="24dp"
+            app:layout_constraintTop_toBottomOf="@id/spCategoria"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <Button
+            android:id="@+id/btnVolverMenu"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:text="Volver al menú"
+            android:textSize="18sp"
+            android:layout_marginTop="12dp"
+            app:layout_constraintTop_toBottomOf="@id/btnGuardarProducto"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>
