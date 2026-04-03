@@ -64,4 +64,4 @@ Un producto será visible para el cliente en catálogo si cumple todas estas con
   "estado": true,
   "comercioId": 4
 }
-
+```
