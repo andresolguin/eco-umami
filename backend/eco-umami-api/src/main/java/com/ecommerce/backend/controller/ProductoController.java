@@ -1,14 +1,20 @@
 package com.ecommerce.backend.controller;
 
+import com.ecommerce.backend.dto.ProductoCreateRequest;
+import com.ecommerce.backend.dto.ProductoResponse;
+import com.ecommerce.backend.entity.Categoria;
 import com.ecommerce.backend.entity.Producto;
+import com.ecommerce.backend.entity.Usuario;
 import com.ecommerce.backend.service.ProductoService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/productos")
+@RequestMapping({"/productos", "/api/productos"})
 public class ProductoController {
 
     private final ProductoService productoService;
@@ -43,8 +49,46 @@ public class ProductoController {
 
     // 🔹 CREAR
     @PostMapping
-    public Producto guardar(@RequestBody Producto producto){
-        return productoService.guardar(producto);
+    public ResponseEntity<ProductoResponse> guardar(@RequestBody ProductoCreateRequest request) {
+
+        Categoria categoria = new Categoria();
+        categoria.setId(request.getCategoriaId());
+
+        Usuario vendedor = new Usuario();
+        vendedor.setId(request.getVendedorId());
+
+        Producto producto = Producto.builder()
+                .codigo(request.getCodigo())
+                .nombre(request.getNombre())
+                .descripcion(request.getDescripcion())
+                .precioOriginal(request.getPrecioOriginal())
+                .precioReducido(request.getPrecioReducido())
+                .fechaVencimiento(request.getFechaVencimiento())
+                .stock(request.getStock())
+                .unidadVenta(request.getUnidadVenta())
+                .estado(true)
+                .categoria(categoria)
+                .vendedor(vendedor)
+                .build();
+
+        Producto productoGuardado = productoService.guardar(producto);
+
+        ProductoResponse response = ProductoResponse.builder()
+                .id(productoGuardado.getId())
+                .codigo(productoGuardado.getCodigo())
+                .nombre(productoGuardado.getNombre())
+                .descripcion(productoGuardado.getDescripcion())
+                .precioOriginal(productoGuardado.getPrecioOriginal())
+                .precioReducido(productoGuardado.getPrecioReducido())
+                .fechaVencimiento(productoGuardado.getFechaVencimiento())
+                .stock(productoGuardado.getStock())
+                .unidadVenta(productoGuardado.getUnidadVenta())
+                .estado(productoGuardado.getEstado())
+                .categoriaId(productoGuardado.getCategoria().getId())
+                .vendedorId(productoGuardado.getVendedor().getId())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     // 🔹 MODIFICAR
