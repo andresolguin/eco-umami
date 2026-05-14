@@ -43,8 +43,57 @@ public class ProductoController {
 
     // 🔹 BUSCAR POR ID
     @GetMapping("/{id}")
-    public Optional<Producto> buscarPorId(@PathVariable Integer id){
-        return productoService.buscarPorId(id);
+    public ResponseEntity<?> buscarPorId(@PathVariable Integer id){
+
+        Optional<Producto> optionalProducto = productoService.buscarPorId(id);
+
+        // NO EXISTE
+        if(optionalProducto.isEmpty()){
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body("Producto no encontrado");
+        }
+
+        Producto producto = optionalProducto.get();
+
+        // PRODUCTO INACTIVO
+        if(!producto.getEstado()){
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body("Producto no disponible");
+        }
+
+        // SIN STOCK
+        if(producto.getStock() <= 0){
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body("Producto sin stock");
+        }
+
+        // VENCIDO
+        if(producto.getFechaVencimiento().isBefore(java.time.LocalDate.now())){
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body("Producto vencido");
+        }
+
+        // RESPONSE DTO
+        ProductoResponse response = ProductoResponse.builder()
+                .id(producto.getId())
+                .codigo(producto.getCodigo())
+                .nombre(producto.getNombre())
+                .descripcion(producto.getDescripcion())
+                .precioOriginal(producto.getPrecioOriginal())
+                .precioReducido(producto.getPrecioReducido())
+                .fechaVencimiento(producto.getFechaVencimiento())
+                .stock(producto.getStock())
+                .unidadVenta(producto.getUnidadVenta())
+                .estado(producto.getEstado())
+                .categoriaId(producto.getCategoria().getId())
+                .vendedorId(producto.getVendedor().getId())
+                .build();
+
+        return ResponseEntity.ok(response);
     }
 
     // 🔹 CREAR
