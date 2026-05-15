@@ -9,7 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/usuarios")
+@RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AuthController {
 
@@ -20,8 +20,12 @@ public class AuthController {
         return ResponseEntity.ok(authService.register(req));
     }
 
+
+
     @PostMapping("/login")
     public ResponseEntity<Usuario> login(@RequestBody LoginRequest req) {
-        return ResponseEntity.ok(authService.login(req));
+        return ResponseEntity.ok(
+                authService.login(req)
+        );
     }
 }
