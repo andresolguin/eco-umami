@@ -24,18 +24,78 @@ public class UsuarioService {
         return usuarioRepository.findById(id);
     }
 
+    // ✅ GUARDAR CON VALIDACIONES
     public Usuario guardar(Usuario usuario){
+
+        // Verificar mail único
+        if (usuarioRepository.existsByMail(usuario.getMail())) {
+            throw new RuntimeException("El mail ya está registrado");
+        }
+
+        // Estado activo por defecto
         if (usuario.getEstado() == null) {
             usuario.setEstado(true);
         }
+
         return usuarioRepository.save(usuario);
+    }
+
+    // ✅ MODIFICAR SIN PISAR CONTRASEÑA
+    public Usuario modificar(Integer id, Usuario usuario){
+        Usuario existente = usuarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        // Verificar mail único si cambia
+        if (!existente.getMail().equals(usuario.getMail()) &&
+                usuarioRepository.existsByMail(usuario.getMail())) {
+            throw new RuntimeException("El mail ya está en uso");
+        }
+
+        // Solo actualizar campos, NO la contraseña
+        existente.setMail(usuario.getMail());
+        existente.setNombre(usuario.getNombre());
+        existente.setApellido(usuario.getApellido());
+        existente.setDni(usuario.getDni());
+        existente.setRazonSocial(usuario.getRazonSocial());
+        existente.setCuit(usuario.getCuit());
+        existente.setDireccion(usuario.getDireccion());
+        existente.setCiudad(usuario.getCiudad());
+        existente.setCodigoPostal(usuario.getCodigoPostal());
+        existente.setTelefono(usuario.getTelefono());
+
+        return usuarioRepository.save(existente);
+    }
+
+    // ✅ LOGIN CON VALIDACIONES
+    public Usuario login(String mail, String pass){
+        // Verificar que existe
+        Usuario usuario = usuarioRepository.findByMail(mail)
+                .orElseThrow(() -> new RuntimeException("Mail o contraseña incorrectos"));
+
+        // Verificar que está activo
+        if (!Boolean.TRUE.equals(usuario.getEstado())) {
+            throw new RuntimeException("El usuario está inactivo");
+        }
+
+        // Verificar contraseña
+        if (!usuario.getPass().equals(pass)) {
+            throw new RuntimeException("Mail o contraseña incorrectos");
+        }
+
+        return usuario;
     }
 
     public void eliminar(Integer id){
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        usuario.setEstado(false);
+        usuarioRepository.save(usuario);
+    }
 
-        usuario.setEstado(false); // ← eliminación lógica
+    public void reactivar(Integer id){
+        Usuario usuario = usuarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        usuario.setEstado(true);
         usuarioRepository.save(usuario);
     }
 
@@ -59,15 +119,6 @@ public class UsuarioService {
         return usuarioRepository.findByDni(dni);
     }
 
-    public void reactivar(Integer id){
-        Usuario usuario = usuarioRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-
-        usuario.setEstado(true);
-        usuarioRepository.save(usuario);
-    }
-
-    // FILTRAR POR ESTADO
     public List<Usuario> listarPorEstado(Boolean estado){
         return usuarioRepository.findByEstado(estado);
     }

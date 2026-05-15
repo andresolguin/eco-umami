@@ -47,11 +47,9 @@ public class UsuarioController {
         return usuarioService.guardar(usuario);
     }
 
-    // 🔹 MODIFICAR
     @PutMapping("/{id}")
     public Usuario modificar(@PathVariable Integer id, @RequestBody Usuario usuario){
-        usuario.setId(id);
-        return usuarioService.guardar(usuario);
+        return usuarioService.modificar(id, usuario);
     }
 
     // 🔹 ELIMINACIÓN LÓGICA
