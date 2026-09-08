@@ -9,7 +9,6 @@ import com.ecommerce.backend.repository.TipoPersonaRepository;
 import com.ecommerce.backend.repository.TipoUsuarioRepository;
 import com.ecommerce.backend.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,7 +18,6 @@ public class AuthService {
     private final UsuarioRepository usuarioRepository;
     private final TipoUsuarioRepository tipoUsuarioRepository;
     private final TipoPersonaRepository tipoPersonaRepository;
-    private final PasswordEncoder passwordEncoder;
 
     public Usuario register(RegisterRequest req) {
         if (usuarioRepository.existsByMail(req.getMail())) {
@@ -51,7 +49,7 @@ public class AuthService {
 
         Usuario u = Usuario.builder()
                 .mail(req.getMail())
-                .pass(passwordEncoder.encode(req.getPass()))
+                .pass(req.getPass())
                 .tipoUsuario(tipoUsuario)
                 .tipoPersona(tipoPersona)
                 .estado(true)
@@ -68,7 +66,7 @@ public class AuthService {
             throw new IllegalArgumentException("Usuario inactivo");
         }
 
-        if (!passwordEncoder.matches(req.getPass(), u.getPass())) {
+        if (!u.getPass().equals(req.getPass())) {
             throw new IllegalArgumentException("Credenciales inválidas");
         }
 
