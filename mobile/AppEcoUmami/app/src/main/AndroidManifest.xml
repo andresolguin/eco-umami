@@ -18,10 +18,10 @@
         <activity android:name=".MenuClienteActivity" />
         <activity android:name=".RegistroActivity" />
         <activity android:name=".AltaProductoActivity" />
-<!--        <activity android:name=".MenuNegocioActivity" />-->
+        <activity android:name=".MenuNegocioActivity" />
 
         <activity
-            android:name=".MenuNegocioActivity"
+            android:name=".Principal"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

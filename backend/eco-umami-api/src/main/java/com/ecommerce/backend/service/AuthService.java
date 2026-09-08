@@ -33,6 +33,20 @@ public class AuthService {
                     .orElseThrow(() -> new IllegalArgumentException("TipoPersona inválido"));
         }
 
+        if (req.getIdTipoUsuario() == 1) {
+            throw new IllegalArgumentException("No se puede registrar un administrador");
+        }
+
+        if (req.getIdTipoUsuario() == 2 && req.getIdTipoPersona() != 1) {
+            throw new IllegalArgumentException("Un cliente debe ser persona física");
+        }
+
+        if (req.getIdTipoUsuario() == 3 &&
+                req.getIdTipoPersona() != 1 &&
+                req.getIdTipoPersona() != 2) {
+            throw new IllegalArgumentException("Tipo de persona inválido para comercio");
+        }
+
         Usuario u = Usuario.builder()
                 .mail(req.getMail())
                 .pass(req.getPass())
