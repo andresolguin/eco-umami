@@ -6,9 +6,9 @@ import retrofit2.http.POST;
 
 public interface AuthApi {
 
-    @POST("api/usuarios/login")
+    @POST("api/auth/login")
     Call<Usuario> login(@Body LoginRequest request);
 
-    @POST("api/usuarios/register")
+    @POST("api/auth/register")
     Call<Usuario> register(@Body RegisterRequest request);
 }
