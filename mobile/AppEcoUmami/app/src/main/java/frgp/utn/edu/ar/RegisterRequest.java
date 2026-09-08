@@ -1,8 +1,5 @@
-package com.ecommerce.backend.dto;
+package frgp.utn.edu.ar;
 
-import lombok.Data;
-
-@Data
 public class RegisterRequest {
 
     private String mail;

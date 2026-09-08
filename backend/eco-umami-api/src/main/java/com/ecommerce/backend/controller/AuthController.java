@@ -16,12 +16,24 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<Usuario> register(@RequestBody RegisterRequest req) {
-        return ResponseEntity.ok(authService.register(req));
+    public ResponseEntity<?> register(@RequestBody RegisterRequest req) {
+        try {
+            return ResponseEntity.ok(authService.register(req));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity
+                    .status(409)
+                    .body(e.getMessage());
+        }
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Usuario> login(@RequestBody LoginRequest req) {
-        return ResponseEntity.ok(authService.login(req));
+    public ResponseEntity<?> login(@RequestBody LoginRequest req) {
+        try {
+            return ResponseEntity.ok(authService.login(req));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity
+                    .status(401)
+                    .body(e.getMessage());
+        }
     }
 }
