@@ -12,6 +12,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import androidx.appcompat.app.AppCompatActivity;
 import java.util.Calendar;
+import org.json.JSONObject;
+import java.io.IOException;
 
 public class AltaProductoActivity extends AppCompatActivity {
 
@@ -89,9 +91,26 @@ public class AltaProductoActivity extends AppCompatActivity {
                                     "Producto creado correctamente",
                                     Toast.LENGTH_LONG).show();
                         } else {
-                            Toast.makeText(AltaProductoActivity.this,
-                                    "Error: " + response.code(),
-                                    Toast.LENGTH_LONG).show();
+                            String mensaje = "No se pudo crear el producto";
+
+                            if (response.errorBody() != null) {
+                                try {
+                                    String cuerpo = response.errorBody().string();
+                                    JSONObject json = new JSONObject(cuerpo);
+
+                                    if (json.has("mensaje")) {
+                                        mensaje = json.getString("mensaje");
+                                    }
+                                } catch (Exception e) {
+                                    // Se conserva el mensaje genérico
+                                }
+                            }
+
+                            Toast.makeText(
+                                    AltaProductoActivity.this,
+                                    mensaje,
+                                    Toast.LENGTH_LONG
+                            ).show();
                         }
                     }
 

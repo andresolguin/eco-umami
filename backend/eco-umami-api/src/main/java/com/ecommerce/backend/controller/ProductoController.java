@@ -29,10 +29,26 @@ public class ProductoController {
         return productoService.listarTodos();
     }
 
-    // 🔹 LISTAR ACTIVOS para cliente
+    // LISTAR PRODUCTOS ACTIVOS PARA CLIENTE
     @GetMapping("/activos")
-    public List<Producto> listarActivos(){
-        return productoService.listarActivos();
+    public List<ProductoResponse> listarActivos() {
+        return productoService.listarActivos()
+                .stream()
+                .map(producto -> ProductoResponse.builder()
+                        .id(producto.getId())
+                        .codigo(producto.getCodigo())
+                        .nombre(producto.getNombre())
+                        .descripcion(producto.getDescripcion())
+                        .precioOriginal(producto.getPrecioOriginal())
+                        .precioReducido(producto.getPrecioReducido())
+                        .fechaVencimiento(producto.getFechaVencimiento())
+                        .stock(producto.getStock())
+                        .unidadVenta(producto.getUnidadVenta())
+                        .estado(producto.getEstado())
+                        .categoriaId(producto.getCategoria().getId())
+                        .vendedorId(producto.getVendedor().getId())
+                        .build())
+                .toList();
     }
 
     // 🔹 LISTAR POR ESTADO
