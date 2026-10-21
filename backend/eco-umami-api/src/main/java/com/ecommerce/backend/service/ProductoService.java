@@ -40,30 +40,35 @@ public class ProductoService {
         return productoRepository.findById(id);
     }
 
-    // 🔹 CREAR
-    public Producto guardar(Producto producto){
+    // CREAR
+    public Producto guardar(Producto producto) {
 
-        // ✅ VALIDAR CÓDIGO ÚNICO
-        if(productoRepository.existsByCodigo(producto.getCodigo())){
-            throw new RuntimeException("El código ya existe");
+        // VALIDAR CÓDIGO ÚNICO
+        if (productoRepository.existsByCodigo(producto.getCodigo())) {
+            throw new IllegalArgumentException(
+                    "Ya existe un producto con ese código");
         }
 
-        // ✅ VALIDAR PRECIOS
-        if (producto.getPrecioReducido().compareTo(producto.getPrecioOriginal()) >= 0) {
-            throw new RuntimeException("El precio reducido debe ser menor al original");
+        // VALIDAR PRECIOS
+        if (producto.getPrecioReducido().compareTo(
+                producto.getPrecioOriginal()) >= 0) {
+            throw new IllegalArgumentException(
+                    "El precio reducido debe ser menor al original");
         }
 
-        // ✅ VALIDAR STOCK
+        // VALIDAR STOCK
         if (producto.getStock() < 0) {
-            throw new RuntimeException("El stock no puede ser negativo");
+            throw new IllegalArgumentException(
+                    "El stock no puede ser negativo");
         }
 
-        // ✅ VALIDAR FECHA
+        // VALIDAR FECHA
         if (producto.getFechaVencimiento().isBefore(LocalDate.now())) {
-            throw new RuntimeException("El producto no puede estar vencido");
+            throw new IllegalArgumentException(
+                    "La fecha de vencimiento debe ser igual o posterior a hoy");
         }
 
-        // ✅ ESTADO POR DEFECTO
+        // ESTADO POR DEFECTO
         if (producto.getEstado() == null) {
             producto.setEstado(true);
         }
