@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.content.Intent;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -41,6 +42,17 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
         holder.txtFechaVencimiento.setText(
                 "Vence: " + producto.getFechaVencimiento()
         );
+        holder.itemView.setOnClickListener(v -> {
+
+            Intent intent = new Intent(
+                    holder.itemView.getContext(),
+                    DetalleProductoActivity.class
+            );
+
+            intent.putExtra("productoId", producto.getId());
+
+            holder.itemView.getContext().startActivity(intent);
+        });
     }
 
     @Override

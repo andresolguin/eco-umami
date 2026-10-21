@@ -15,4 +15,6 @@ public interface ProductoApi {
 
     @GET("api/productos/activos")
     Call<List<ProductoResponse>> listarProductosActivos();
+    @GET("api/productos/{id}")
+    Call<ProductoResponse> obtenerProductoPorId(@Path("id") Integer id);
 }
