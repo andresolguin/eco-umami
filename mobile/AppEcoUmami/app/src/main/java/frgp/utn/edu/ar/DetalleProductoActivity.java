@@ -5,6 +5,10 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class DetalleProductoActivity extends AppCompatActivity {
 
     private TextView txtNombreProducto;
@@ -32,24 +36,106 @@ public class DetalleProductoActivity extends AppCompatActivity {
         txtCategoria = findViewById(R.id.txtCategoria);
         txtComercio = findViewById(R.id.txtComercio);
 
-        String nombre = getIntent().getStringExtra("nombre");
-        String descripcion = getIntent().getStringExtra("descripcion");
-        String precioReducido = getIntent().getStringExtra("precioReducido");
-        String precioOriginal = getIntent().getStringExtra("precioOriginal");
-        String fechaVencimiento = getIntent().getStringExtra("fechaVencimiento");
-        String stock = getIntent().getStringExtra("stock");
-        String unidadVenta = getIntent().getStringExtra("unidadVenta");
-        String categoria = getIntent().getStringExtra("categoria");
-        String comercio = getIntent().getStringExtra("comercio");
+        int productoId = getIntent().getIntExtra("productoId", -1);
 
-        txtNombreProducto.setText(nombre != null ? nombre : "Producto");
-        txtDescripcionProducto.setText(descripcion != null ? descripcion : "Sin descripción");
-        txtPrecioReducido.setText("Precio Eco Umami: $" + (precioReducido != null ? precioReducido : "-"));
-        txtPrecioOriginal.setText("Precio original: $" + (precioOriginal != null ? precioOriginal : "-"));
-        txtVencimiento.setText("Vencimiento: " + (fechaVencimiento != null ? fechaVencimiento : "-"));
-        txtStock.setText("Stock disponible: " + (stock != null ? stock : "-"));
-        txtUnidadVenta.setText("Unidad de venta: " + (unidadVenta != null ? unidadVenta : "-"));
-        txtCategoria.setText("Categoría: " + (categoria != null ? categoria : "-"));
-        txtComercio.setText("Comercio: " + (comercio != null ? comercio : "-"));
+        if (productoId == -1) {
+            mostrarError("No se pudo identificar el producto");
+            return;
+        }
+
+        cargarProducto(productoId);
+    }
+
+    private void cargarProducto(int productoId) {
+
+        ProductoApi api = ApiClient.getClient().create(ProductoApi.class);
+
+        api.obtenerProductoPorId(productoId).enqueue(
+                new Callback<ProductoResponse>() {
+
+                    @Override
+                    public void onResponse(
+                            Call<ProductoResponse> call,
+                            Response<ProductoResponse> response) {
+
+                        if (isFinishing() || isDestroyed()) {
+                            return;
+                        }
+
+                        if (response.isSuccessful()
+                                && response.body() != null) {
+
+                            mostrarProducto(response.body());
+
+                        } else {
+                            mostrarError(
+                                    "No se pudo cargar el detalle del producto"
+                            );
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(
+                            Call<ProductoResponse> call,
+                            Throwable t) {
+
+                        if (isFinishing() || isDestroyed()) {
+                            return;
+                        }
+
+                        mostrarError(
+                                "No se pudo conectar con el servidor"
+                        );
+                    }
+                }
+        );
+    }
+
+    private void mostrarProducto(ProductoResponse producto) {
+
+        txtNombreProducto.setText(
+                producto.getNombre() != null
+                        ? producto.getNombre()
+                        : "Producto"
+        );
+
+        txtDescripcionProducto.setText(
+                producto.getDescripcion() != null
+                        ? producto.getDescripcion()
+                        : "Sin descripción"
+        );
+
+        txtPrecioReducido.setText(
+                "Precio Eco Umami: $" + producto.getPrecioReducido()
+        );
+
+        txtPrecioOriginal.setText(
+                "Precio original: $" + producto.getPrecioOriginal()
+        );
+
+        txtVencimiento.setText(
+                "Vencimiento: " + producto.getFechaVencimiento()
+        );
+
+        txtStock.setText(
+                "Stock disponible: " + producto.getStock()
+        );
+
+        txtUnidadVenta.setText(
+                "Unidad de venta: " + producto.getUnidadVenta()
+        );
+
+        txtCategoria.setText(
+                "Categoría: " + producto.getCategoriaId()
+        );
+
+        txtComercio.setText(
+                "Comercio: " + producto.getVendedorId()
+        );
+    }
+
+    private void mostrarError(String mensaje) {
+        txtNombreProducto.setText(mensaje);
+        txtDescripcionProducto.setText("");
     }
 }
