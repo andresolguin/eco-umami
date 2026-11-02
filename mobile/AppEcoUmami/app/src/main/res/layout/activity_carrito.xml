@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="#F4F8F4">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Mi carrito"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:textColor="#2E7D32" />
+
+    <TextView
+        android:id="@+id/txtCarritoVacio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Tu carrito está vacío"
+        android:textSize="18sp"
+        android:textColor="#666666"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/contenedorItems"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="16dp"
+        android:orientation="vertical" />
+
+    <TextView
+        android:id="@+id/txtTotalCarrito"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Total: $0"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="#2E7D32" />
+
+</LinearLayout>

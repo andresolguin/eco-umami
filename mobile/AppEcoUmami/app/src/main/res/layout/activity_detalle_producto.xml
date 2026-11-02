@@ -98,10 +98,28 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:layout_marginBottom="32dp"
+            android:layout_marginBottom="12dp"
             android:text="Comercio:"
             android:textColor="#333333"
             android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/txtCantidad"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:hint="Cantidad"
+            android:inputType="number"
+            android:text="1" />
+
+        <Button
+            android:id="@+id/btnAgregarCarrito"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="24dp"
+            android:text="Agregar al carrito"
+            android:textAllCaps="false" />
 
     </LinearLayout>
 
