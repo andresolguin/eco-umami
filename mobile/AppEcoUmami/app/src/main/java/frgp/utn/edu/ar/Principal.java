@@ -6,6 +6,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.content.SharedPreferences;
 
 import androidx.activity.ComponentActivity;
 
@@ -71,6 +72,13 @@ public class Principal extends ComponentActivity {
                 if (response.isSuccessful() && response.body() != null) {
 
                     Usuario usuario = response.body();
+
+                    SharedPreferences preferences =
+                            getSharedPreferences("EcoUmamiPrefs", MODE_PRIVATE);
+
+                    preferences.edit()
+                            .putInt("idUsuario", usuario.getId())
+                            .apply();
 
                     if (usuario.getTipoUsuario() == null) {
                         Toast.makeText(

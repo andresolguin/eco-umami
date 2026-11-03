@@ -1,9 +1,15 @@
 package frgp.utn.edu.ar;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -21,6 +27,11 @@ public class DetalleProductoActivity extends AppCompatActivity {
     private TextView txtCategoria;
     private TextView txtComercio;
 
+    private EditText txtCantidad;
+    private Button btnAgregarCarrito;
+
+    private int productoId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,12 +47,18 @@ public class DetalleProductoActivity extends AppCompatActivity {
         txtCategoria = findViewById(R.id.txtCategoria);
         txtComercio = findViewById(R.id.txtComercio);
 
-        int productoId = getIntent().getIntExtra("productoId", -1);
+        txtCantidad = findViewById(R.id.txtCantidad);
+        btnAgregarCarrito = findViewById(R.id.btnAgregarCarrito);
+
+        productoId = getIntent().getIntExtra("productoId", -1);
 
         if (productoId == -1) {
             mostrarError("No se pudo identificar el producto");
+            btnAgregarCarrito.setEnabled(false);
             return;
         }
+
+        btnAgregarCarrito.setOnClickListener(v -> agregarAlCarrito());
 
         cargarProducto(productoId);
     }
@@ -86,6 +103,117 @@ public class DetalleProductoActivity extends AppCompatActivity {
                         mostrarError(
                                 "No se pudo conectar con el servidor"
                         );
+                    }
+                }
+        );
+    }
+
+    private void agregarAlCarrito() {
+
+        String cantidadTexto =
+                txtCantidad.getText().toString().trim();
+
+        if (cantidadTexto.isEmpty()) {
+            Toast.makeText(
+                    this,
+                    "Ingresá una cantidad",
+                    Toast.LENGTH_SHORT
+            ).show();
+            return;
+        }
+
+        int cantidad;
+
+        try {
+            cantidad = Integer.parseInt(cantidadTexto);
+        } catch (NumberFormatException e) {
+            Toast.makeText(
+                    this,
+                    "Cantidad inválida",
+                    Toast.LENGTH_SHORT
+            ).show();
+            return;
+        }
+
+        if (cantidad <= 0) {
+            Toast.makeText(
+                    this,
+                    "La cantidad debe ser mayor a cero",
+                    Toast.LENGTH_SHORT
+            ).show();
+            return;
+        }
+
+        SharedPreferences preferences =
+                getSharedPreferences(
+                        "EcoUmamiPrefs",
+                        MODE_PRIVATE
+                );
+
+        int idUsuario =
+                preferences.getInt("idUsuario", -1);
+
+        if (idUsuario == -1) {
+            Toast.makeText(
+                    this,
+                    "No se pudo identificar al usuario",
+                    Toast.LENGTH_LONG
+            ).show();
+            return;
+        }
+
+        CarritoAgregarRequest request =
+                new CarritoAgregarRequest(
+                        idUsuario,
+                        productoId,
+                        cantidad
+                );
+
+        CarritoApi api =
+                ApiClient.getClient().create(CarritoApi.class);
+
+        btnAgregarCarrito.setEnabled(false);
+
+        api.agregarProducto(request).enqueue(
+                new Callback<Map<String, Object>>() {
+
+                    @Override
+                    public void onResponse(
+                            Call<Map<String, Object>> call,
+                            Response<Map<String, Object>> response) {
+
+                        btnAgregarCarrito.setEnabled(true);
+
+                        if (response.isSuccessful()) {
+
+                            Toast.makeText(
+                                    DetalleProductoActivity.this,
+                                    "Producto agregado al carrito",
+                                    Toast.LENGTH_LONG
+                            ).show();
+
+                        } else {
+
+                            Toast.makeText(
+                                    DetalleProductoActivity.this,
+                                    "No se pudo agregar el producto al carrito",
+                                    Toast.LENGTH_LONG
+                            ).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(
+                            Call<Map<String, Object>> call,
+                            Throwable t) {
+
+                        btnAgregarCarrito.setEnabled(true);
+
+                        Toast.makeText(
+                                DetalleProductoActivity.this,
+                                "No se pudo conectar con el servidor",
+                                Toast.LENGTH_LONG
+                        ).show();
                     }
                 }
         );

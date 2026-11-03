@@ -30,11 +30,15 @@ public class MenuClienteActivity extends AppCompatActivity {
         });
 
         // CARRITO
-        btnCarrito.setOnClickListener(v ->
-                Toast.makeText(MenuClienteActivity.this,
-                        "Proximamente",
-                        Toast.LENGTH_SHORT).show()
-        );
+        // CARRITO
+        btnCarrito.setOnClickListener(v -> {
+            Intent intent = new Intent(
+                    MenuClienteActivity.this,
+                    CarritoActivity.class
+            );
+
+            startActivity(intent);
+        });
 
         // PEDIDOS
         btnPedidos.setOnClickListener(v ->
