@@ -189,31 +189,4 @@ public class CarritoService {
                 .total(total)
                 .build();
     }
-
-    @Transactional
-    public void eliminarProducto(Integer idUsuario, Integer idProducto) {
-
-        Carrito carrito = carritoRepository
-                .findByUsuarioId(idUsuario)
-                .orElseThrow(() ->
-                        new IllegalArgumentException("El carrito está vacío"));
-
-        CarritoItemId itemId =
-                new CarritoItemId(carrito.getId(), idProducto);
-
-        CarritoItem item = carritoItemRepository
-                .findById(itemId)
-                .orElseThrow(() ->
-                        new IllegalArgumentException(
-                                "El producto no está en el carrito"));
-
-        List<CarritoItem> items =
-                carritoItemRepository.findByCarritoId(carrito.getId());
-
-        if (items.size() == 1) {
-            carritoRepository.delete(carrito);
-        } else {
-            carritoItemRepository.delete(item);
-        }
-    }
 }
