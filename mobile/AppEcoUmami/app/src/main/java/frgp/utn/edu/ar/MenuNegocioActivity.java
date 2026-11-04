@@ -23,11 +23,13 @@ public class MenuNegocioActivity extends AppCompatActivity {
         btnCerrarSesion = findViewById(R.id.btnCerrarSesion);
 
         // MIS PRODUCTOS
-        btnMisProductos.setOnClickListener(v ->
-                Toast.makeText(MenuNegocioActivity.this,
-                        "Proximamente",
-                        Toast.LENGTH_SHORT).show()
-        );
+        btnMisProductos.setOnClickListener(v -> {
+            Intent intent = new Intent(
+                    MenuNegocioActivity.this,
+                    MisProductosActivity.class
+            );
+            startActivity(intent);
+        });
 
         // NUEVO PRODUCTO
         btnNuevoProducto.setOnClickListener(v -> {
