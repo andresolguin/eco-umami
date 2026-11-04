@@ -24,4 +24,6 @@ public interface ProductoRepository extends JpaRepository<Producto, Integer> {
     List<Producto> findByEstadoTrueAndStockGreaterThanAndFechaVencimientoAfter(
             Integer stock, LocalDate fecha
     );
+
+    List<Producto> findByVendedor_Id(Integer idVendedor);
 }

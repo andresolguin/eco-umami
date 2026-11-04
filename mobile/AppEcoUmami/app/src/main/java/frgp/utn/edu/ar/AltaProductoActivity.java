@@ -13,6 +13,7 @@ import retrofit2.Response;
 import androidx.appcompat.app.AppCompatActivity;
 import java.util.Calendar;
 import org.json.JSONObject;
+import android.content.SharedPreferences;
 import java.io.IOException;
 
 public class AltaProductoActivity extends AppCompatActivity {
@@ -76,8 +77,20 @@ public class AltaProductoActivity extends AppCompatActivity {
                 producto.setStock(Integer.parseInt(etStock.getText().toString()));
                 producto.setUnidadVenta(etUnidadVenta.getText().toString());
 
+                SharedPreferences preferences =
+                        getSharedPreferences("EcoUmamiPrefs", MODE_PRIVATE);
+
+                int idUsuario = preferences.getInt("idUsuario", -1);
+
+                if (idUsuario == -1) {
+                    Toast.makeText(this,
+                            "Error: no se pudo identificar al vendedor",
+                            Toast.LENGTH_LONG).show();
+                    return;
+                }
+
                 producto.setCategoriaId(1);
-                producto.setVendedorId(1);
+                producto.setVendedorId(idUsuario);
 
                 ProductoApi api = ApiClient.getClient().create(ProductoApi.class);
 

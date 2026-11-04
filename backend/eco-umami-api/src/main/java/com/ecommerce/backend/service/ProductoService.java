@@ -35,6 +35,11 @@ public class ProductoService {
         return productoRepository.findByEstado(estado);
     }
 
+    // 🔹 LISTAR POR VENDEDOR
+    public List<Producto> listarPorVendedor(Integer idVendedor) {
+        return productoRepository.findByVendedor_Id(idVendedor);
+    }
+
     // 🔹 BUSCAR POR ID
     public Optional<Producto> buscarPorId(Integer id){
         return productoRepository.findById(id);

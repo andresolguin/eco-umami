@@ -51,6 +51,31 @@ public class ProductoController {
                 .toList();
     }
 
+    // LISTAR PRODUCTOS DE UN VENDEDOR
+    @GetMapping("/vendedor/{idVendedor}")
+    public List<ProductoResponse> listarPorVendedor(
+            @PathVariable Integer idVendedor) {
+
+        return productoService.listarPorVendedor(idVendedor)
+                .stream()
+                .map(producto -> ProductoResponse.builder()
+                        .id(producto.getId())
+                        .codigo(producto.getCodigo())
+                        .nombre(producto.getNombre())
+                        .descripcion(producto.getDescripcion())
+                        .precioOriginal(producto.getPrecioOriginal())
+                        .precioReducido(producto.getPrecioReducido())
+                        .fechaVencimiento(producto.getFechaVencimiento())
+                        .stock(producto.getStock())
+                        .unidadVenta(producto.getUnidadVenta())
+                        .estado(producto.getEstado())
+                        .categoriaId(producto.getCategoria().getId())
+                        .vendedorId(producto.getVendedor().getId())
+                        .build())
+                .toList();
+    }
+
+
     // 🔹 LISTAR POR ESTADO
     @GetMapping("/estado")
     public List<Producto> listarPorEstado(@RequestParam Boolean estado){
