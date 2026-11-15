@@ -4,11 +4,14 @@ import com.ecommerce.backend.entity.*;
 import com.ecommerce.backend.repository.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.ecommerce.backend.dto.PedidoItemResponse;
+import com.ecommerce.backend.dto.PedidoResponse;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+
 
 @Service
 public class PedidoService {
@@ -23,19 +26,22 @@ public class PedidoService {
     private final PedidoRepository pedidoRepository;
     private final PedidoItemRepository pedidoItemRepository;
     private final ProductoRepository productoRepository;
+    private final UsuarioRepository usuarioRepository;
 
     public PedidoService(
             CarritoRepository carritoRepository,
             CarritoItemRepository carritoItemRepository,
             PedidoRepository pedidoRepository,
             PedidoItemRepository pedidoItemRepository,
-            ProductoRepository productoRepository) {
+            ProductoRepository productoRepository,
+            UsuarioRepository usuarioRepository) {
 
         this.carritoRepository = carritoRepository;
         this.carritoItemRepository = carritoItemRepository;
         this.pedidoRepository = pedidoRepository;
         this.pedidoItemRepository = pedidoItemRepository;
         this.productoRepository = productoRepository;
+        this.usuarioRepository = usuarioRepository;
     }
 
     @Transactional
@@ -146,5 +152,110 @@ public class PedidoService {
         carritoRepository.delete(carrito);
 
         return pedido;
+    }
+
+    @Transactional(readOnly = true)
+    public List<PedidoResponse> obtenerPedidosPorUsuario(Integer idUsuario) {
+
+        usuarioRepository.findById(idUsuario)
+                .orElseThrow(() ->
+                        new IllegalArgumentException(
+                                "Usuario no encontrado"));
+
+        return pedidoRepository
+                .findByUsuarioIdOrderByFechaPedidoDesc(idUsuario)
+                .stream()
+                .map(this::convertirAResponse)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<PedidoResponse> obtenerPedidosPorComercio(Integer idComercio) {
+
+        usuarioRepository.findById(idComercio)
+                .orElseThrow(() ->
+                        new IllegalArgumentException(
+                                "Comercio no encontrado"));
+
+        return pedidoRepository
+                .findByVendedorIdOrderByFechaPedidoDesc(idComercio)
+                .stream()
+                .map(this::convertirAResponse)
+                .toList();
+    }
+
+    private PedidoResponse convertirAResponse(Pedido pedido) {
+
+        List<PedidoItemResponse> items =
+                pedidoItemRepository
+                        .findByPedidoId(pedido.getId())
+                        .stream()
+                        .map(item ->
+                                PedidoItemResponse.builder()
+                                        .idProducto(
+                                                item.getProducto().getId())
+                                        .nombreProducto(
+                                                item.getProducto().getNombre())
+                                        .cantidad(
+                                                item.getCantidad())
+                                        .precio(
+                                                item.getPrecio())
+                                        .subtotal(
+                                                item.getPrecio()
+                                                        .multiply(
+                                                                BigDecimal.valueOf(
+                                                                        item.getCantidad())))
+                                        .build()
+                        )
+                        .toList();
+
+        return PedidoResponse.builder()
+                .idPedido(pedido.getId())
+                .fechaPedido(pedido.getFechaPedido())
+                .fechaEntrega(pedido.getFechaEntrega())
+                .precioTotal(pedido.getPrecioTotal())
+                .metodoEntrega(pedido.getMetodoEntrega())
+                .metodoPago(pedido.getMetodoPago())
+                .estadoPago(pedido.getEstadoPago())
+                .estadoPedido(pedido.getEstadoPedido())
+                .idUsuario(pedido.getUsuario().getId())
+                .nombreUsuario(
+                        obtenerNombreUsuario(
+                                pedido.getUsuario()))
+                .idComercio(pedido.getVendedor().getId())
+                .nombreComercio(
+                        obtenerNombreComercio(
+                                pedido.getVendedor()))
+                .items(items)
+                .build();
+    }
+
+    private String obtenerNombreUsuario(Usuario usuario) {
+
+        String nombre = usuario.getNombre();
+        String apellido = usuario.getApellido();
+
+        if (nombre != null && apellido != null) {
+            return nombre + " " + apellido;
+        }
+
+        if (nombre != null) {
+            return nombre;
+        }
+
+        return usuario.getMail();
+    }
+
+    private String obtenerNombreComercio(Usuario comercio) {
+
+        if (comercio.getRazonSocial() != null) {
+            return comercio.getRazonSocial();
+        }
+
+        if (comercio.getNombre() != null) {
+            return comercio.getNombre();
+        }
+
+        return comercio.getMail();
     }
 }
