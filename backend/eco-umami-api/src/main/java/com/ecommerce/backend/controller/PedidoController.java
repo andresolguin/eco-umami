@@ -1,5 +1,6 @@
 package com.ecommerce.backend.controller;
 
+import com.ecommerce.backend.dto.ActualizarEstadoPedidoRequest;
 import com.ecommerce.backend.dto.PedidoResponse;
 import com.ecommerce.backend.service.PedidoService;
 import org.springframework.http.ResponseEntity;
@@ -43,6 +44,27 @@ public class PedidoController {
                     pedidoService.obtenerPedidosPorComercio(idComercio);
 
             return ResponseEntity.ok(pedidos);
+
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/{idPedido}/estado")
+    public ResponseEntity<?> actualizarEstadoPedido(
+            @PathVariable Integer idPedido,
+            @RequestBody ActualizarEstadoPedidoRequest request) {
+
+        try {
+            PedidoResponse pedido =
+                    pedidoService.actualizarEstadoPedido(
+                            idPedido,
+                            request.getIdComercio(),
+                            request.getEstadoPedido());
+
+            return ResponseEntity.ok(pedido);
 
         } catch (IllegalArgumentException e) {
             return ResponseEntity

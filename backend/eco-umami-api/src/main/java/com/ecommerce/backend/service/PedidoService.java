@@ -20,6 +20,8 @@ public class PedidoService {
     private static final int METODO_PAGO_EN_COMERCIO = 1;
     private static final int ESTADO_PAGO_PENDIENTE = 1;
     private static final int ESTADO_PEDIDO_GENERADO = 1;
+    private static final int ESTADO_PEDIDO_LISTO_PARA_RETIRAR = 2;
+    private static final int ESTADO_PEDIDO_ENTREGADO = 3;
 
     private final CarritoRepository carritoRepository;
     private final CarritoItemRepository carritoItemRepository;
@@ -182,6 +184,38 @@ public class PedidoService {
                 .stream()
                 .map(this::convertirAResponse)
                 .toList();
+    }
+
+    @Transactional
+    public PedidoResponse actualizarEstadoPedido(
+            Integer idPedido,
+            Integer idComercio,
+            Integer estadoPedido) {
+
+        if (estadoPedido == null
+                || estadoPedido < ESTADO_PEDIDO_GENERADO
+                || estadoPedido > ESTADO_PEDIDO_ENTREGADO) {
+
+            throw new IllegalArgumentException(
+                    "Estado de pedido no válido");
+        }
+
+        Pedido pedido = pedidoRepository
+                .findById(idPedido)
+                .orElseThrow(() ->
+                        new IllegalArgumentException(
+                                "Pedido no encontrado"));
+
+        if (!pedido.getVendedor().getId().equals(idComercio)) {
+            throw new IllegalArgumentException(
+                    "El pedido no pertenece al comercio indicado");
+        }
+
+        pedido.setEstadoPedido(estadoPedido);
+
+        pedido = pedidoRepository.save(pedido);
+
+        return convertirAResponse(pedido);
     }
 
     private PedidoResponse convertirAResponse(Pedido pedido) {
